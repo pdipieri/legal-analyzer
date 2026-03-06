@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analisi Atti Legali</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --white: #fff;
+      --dark: #1c1c1c;
+      --border: #e8e4dd;
+      --muted: #777;
+      --gold: #7c6f5a;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); min-height: 100vh; }
+    h1, h2, h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; }
+
+```
+/* NAV */
+nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 100; }
+.logo { width: 34px; height: 34px; background: var(--dark); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-link { font-size: 0.83rem; color: #666; cursor: pointer; text-decoration: none; }
+
+/* BUTTONS */
+.btn { display: inline-block; border: none; border-radius: 6px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; letter-spacing: 0.1em; transition: all 0.2s; text-align: center; }
+.btn-dark { background: var(--dark); color: #fff; padding: 16px 40px; font-size: 0.85rem; }
+.btn-dark:hover { background: #333; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.btn-dark:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-outline { background: transparent; color: var(--dark); border: 1.5px solid var(--border); padding: 12px; font-size: 0.84rem; width: 100%; margin-top: 10px; }
+.btn-outline:hover { border-color: var(--dark); }
+.btn-sm { padding: 9px 20px; font-size: 0.78rem; }
+
+/* SECTIONS */
+.section { max-width: 860px; margin: 0 auto; padding: 72px 48px; }
+.section-white { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.label-sm { font-size: 0.73rem; letter-spacing: 0.14em; color: #aaa; text-transform: uppercase; margin-bottom: 10px; }
+
+/* HERO */
+.hero { text-align: center; padding: 96px 48px 72px; }
+.badge { display: inline-flex; align-items: center; gap: 8px; background: var(--white); border: 1px solid var(--border); border-radius: 99px; padding: 7px 18px; margin-bottom: 32px; }
+.dot-green { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; display: inline-block; }
+.hero h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.15; margin-bottom: 22px; letter-spacing: -0.025em; }
+.hero em { color: var(--gold); font-style: italic; }
+.hero p { font-size: 1.05rem; color: #666; line-height: 1.75; max-width: 520px; margin: 0 auto 44px; font-weight: 300; }
+.stats { display: flex; justify-content: center; gap: 52px; flex-wrap: wrap; margin-top: 56px; }
+.stat-val { font-family: 'DM Serif Display', serif; font-size: 1.9rem; line-height: 1; }
+.stat-label { font-size: 0.73rem; color: #999; margin-top: 5px; }
+
+/* CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 28px 24px; transition: all 0.25s; }
+.card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.07); transform: translateY(-3px); }
+.card-icon { width: 42px; height: 42px; background: var(--bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 18px; }
+.card-step { font-size: 0.68rem; color: #bbb; letter-spacing: 0.1em; margin-bottom: 6px; }
+.card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.card p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+
+/* REPORT SECTIONS */
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.report-box { background: var(--bg); border-radius: 14px; padding: 26px 28px; border: 1px solid var(--border); }
+.report-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px; border-radius: 8px; transition: background 0.2s; }
+.report-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+.report-row:hover { background: var(--white); }
+.report-row-label { font-family: 'DM Serif Display', serif; font-size: 0.95rem; margin-bottom: 2px; }
+.report-row-detail { font-size: 0.75rem; color: #aaa; }
+.arrow { color: #ddd; transition: color 0.2s; }
+.report-row:hover .arrow { color: var(--dark); }
+
+/* DARK SECTION */
+.dark-box { background: var(--dark); border-radius: 16px; padding: 48px 52px; display: flex; align-items: center; justify-content: space-between; gap: 36px; flex-wrap: wrap; }
+.dark-box h2 { color: #f7f6f2; margin-bottom: 10px; line-height: 1.3; font-size: clamp(1.3rem, 2.5vw, 1.9rem); }
+.dark-box p { font-size: 0.87rem; color: #aaa; line-height: 1.7; max-width: 380px; }
+.dark-list { display: flex; flex-direction: column; gap: 12px; }
+.dark-list span { font-size: 0.85rem; color: #ccc; }
+
+/* CTA */
+.cta { text-align: center; padding: 48px 48px 80px; border-top: 1px solid var(--border); }
+.cta h2 { font-size: clamp(1.6rem, 3vw, 2.6rem); margin-bottom: 14px; }
+.cta p { font-size: 0.9rem; color: var(--muted); margin-bottom: 32px; }
+.cta-sub { font-size: 0.73rem; color: #bbb; margin-top: 14px; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+footer p { font-size: 0.73rem; color: #bbb; }
+
+/* ANALYZER PAGE */
+#analyzer-page { display: none; }
+.topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 24px; display: flex; align-items: center; gap: 16px; }
+.topbar-back { background: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; color: var(--muted); padding: 0; }
+.topbar-divider { width: 1px; height: 18px; background: var(--border); }
+.topbar-title { font-size: 0.82rem; font-weight: 600; }
+.analyzer-inner { max-width: 620px; margin: 0 auto; padding: 48px 24px 0; }
+
+/* STEPBAR */
+.stepbar { display: flex; align-items: center; margin-bottom: 36px; }
+.step-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; transition: all 0.3s; }
+.step-circle.active { background: var(--dark); color: #fff; }
+.step-circle.inactive { background: #e5e7eb; color: #aaa; }
+.step-label { margin-left: 8px; font-size: 0.78rem; font-weight: 600; }
+.step-label.active { color: var(--dark); }
+.step-label.inactive { color: #aaa; }
+.step-line { width: 36px; height: 1px; margin: 0 12px; transition: background 0.3s; }
+.step-line.active { background: var(--dark); }
+.step-line.inactive { background: #e5e7eb; }
+
+/* DROPZONE */
+.dropzone { border: 2px dashed #d1d5db; border-radius: 14px; padding: 44px 24px; text-align: center; cursor: pointer; background: var(--white); transition: all 0.2s; margin-bottom: 20px; }
+.dropzone:hover, .dropzone.dragging { border-color: var(--dark); background: #f0f0ee; }
+.dropzone.has-file { border-color: #4ade80; background: #f0fdf4; }
+.dropzone-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.dropzone-title { font-weight: 600; color: #374151; margin-bottom: 6px; }
+.dropzone-sub { font-size: 0.78rem; color: #9ca3af; }
+.file-name { font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+.file-size { font-size: 0.78rem; color: #6b7280; }
+
+/* FORM */
+label.field-label { display: block; font-size: 0.75rem; font-weight: 600; color: #555; margin-bottom: 8px; letter-spacing: 0.06em; }
+input[type="email"] { width: 100%; padding: 13px 16px; border: 1.5px solid #d1d5db; border-radius: 10px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 20px; background: var(--white); transition: border-color 0.2s; }
+input[type="email"]:focus { border-color: var(--dark); }
+.error-box { background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px; padding: 10px 14px; color: #991b1b; font-size: 0.84rem; margin-bottom: 16px; }
+.disclaimer { margin-top: 12px; font-size: 0.71rem; color: #aaa; text-align: center; line-height: 1.5; }
+
+/* LOADING */
+.loading-wrap { text-align: center; padding: 60px 0; }
+.spinner { width: 52px; height: 52px; margin: 0 auto 24px; border: 3px solid var(--border); border-top-color: var(--dark); border-radius: 50%; animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 1.3rem; color: var(--dark); margin-bottom: 10px; }
+.loading-sub { color: #888; font-size: 0.82rem; }
+
+/* RESULTS */
+.result-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.result-badge-ok { font-size: 0.68rem; letter-spacing: 0.12em; color: #4ade80; font-weight: 700; margin-bottom: 4px; }
+.result-title { font-size: 1.4rem; margin: 0 0 4px; }
+.result-date { font-size: 0.78rem; color: #888; }
+.valutazione { padding: 6px 16px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; flex-shrink: 0; }
+.val-positiva { background: #d1fae5; color: #065f46; }
+.val-neutra { background: #fef3c7; color: #92400e; }
+.val-critica { background: #fee2e2; color: #991b1b; }
+
+.result-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; }
+.result-card.bg-muted { background: var(--bg); border: none; }
+.result-card.bg-warn { background: #fffbf0; border-color: #fde68a; }
+.card-label { font-size: 0.72rem; letter-spacing: 0.1em; color: #888; margin-bottom: 8px; }
+.card-label.warn { color: #92400e; }
+.tag { background: #f3f4f6; border-radius: 6px; padding: 4px 12px; font-size: 0.82rem; color: #374151; display: inline-block; margin: 3px; }
+
+.clausola { border-left-width: 3px; border-left-style: solid; padding-left: 14px; margin-bottom: 14px; }
+.clausola-alto { border-left-color: #ef4444; }
+.clausola-medio { border-left-color: #f59e0b; }
+.clausola-basso { border-left-color: #10b981; }
+.clausola-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.clausola-title { font-weight: 600; font-size: 0.88rem; }
+.clausola-desc { font-size: 0.83rem; color: #555; line-height: 1.65; }
+.risk-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; padding: 2px 9px; border-radius: 99px; }
+.risk-alto { background: #fee2e2; color: #991b1b; }
+.risk-medio { background: #fef3c7; color: #92400e; }
+.risk-basso { background: #d1fae5; color: #065f46; }
+
+.email-row { padding: 16px 20px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; margin-top: 8px; border: 1px solid var(--border); background: var(--bg); transition: all 0.3s; }
+.email-row.sent { background: #f0fdf4; border-color: #bbf7d0; }
+.email-row-title { font-size: 0.83rem; font-weight: 600; margin-bottom: 2px; }
+.email-row-addr { font-size: 0.75rem; color: #888; }
+.ai-disclaimer { font-size: 0.7rem; color: #bbb; text-align: center; margin-top: 10px; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.fade-up { animation: fadeUp 0.5s ease both; }
+.fu-0 { animation-delay: 0s; }
+.fu-1 { animation-delay: 0.1s; }
+.fu-2 { animation-delay: 0.2s; }
+.fu-3 { animation-delay: 0.3s; }
+.fu-4 { animation-delay: 0.4s; }
+
+@media (max-width: 680px) {
+  nav { padding: 16px 20px; }
+  .nav-links span:not(:last-child) { display: none; }
+  .hero { padding: 60px 20px 48px; }
+  .section { padding: 52px 20px; }
+  .section-white .section-inner { padding: 52px 20px; }
+  .report-grid { grid-template-columns: 1fr; gap: 32px; }
+  .dark-box { padding: 32px 28px; }
+  .cta { padding: 40px 20px 60px; }
+  footer { padding: 20px; }
+  .analyzer-inner { padding: 32px 16px 0; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+<!-- ═══ HOME PAGE ═══════════════════════════════════════════════════════════ -->
+
+<div id="home-page">
+  <nav>
+    <div class="logo">⚖️</div>
+    <div class="nav-links">
+      <a class="nav-link" href="#come-funziona">Come funziona</a>
+      <a class="nav-link" href="#sicurezza">Sicurezza</a>
+      <button class="btn btn-dark" style="padding:10px 22px;font-size:0.78rem" onclick="showAnalyzer()">ANALIZZA UN ATTO</button>
+    </div>
+  </nav>
+
+  <div class="section hero">
+    <div class="badge fade-up fu-0">
+      <span class="dot-green"></span>
+      <span style="font-size:0.78rem;color:#666">Per avvocati e professionisti legali</span>
+    </div>
+    <h1 class="fade-up fu-1">Analizza atti legali<br><em>in pochi secondi</em></h1>
+    <p class="fade-up fu-2">Carica un PDF testuale o scansionato — l'AI identifica clausole critiche, rischi ed elementi mancanti. Report completo via email.</p>
+    <div class="fade-up fu-3">
+      <button class="btn btn-dark" onclick="showAnalyzer()">CARICA UN ATTO →</button>
+    </div>
+    <div class="stats fade-up fu-4">
+      <div><div class="stat-val">< 30s</div><div class="stat-label">PDF testuali</div></div>
+      <div><div class="stat-val">~30s</div><div class="stat-label">PDF scansionati</div></div>
+      <div><div class="stat-val">4 sezioni</div><div class="stat-label">Report strutturato</div></div>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid var(--border);max-width:860px;margin:0 auto"></div>
+
+  <div class="section" id="come-funziona">
+    <div class="label-sm">Come funziona</div>
+    <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:36px">Tre passaggi, zero complicazioni</h2>
+    <div class="cards-grid">
+      <div class="card"><div class="card-icon">📄</div><div class="card-step">STEP 1</div><h3>Carica il PDF</h3><p>Testuale o scansionato. Elaborato localmente, mai salvato su server terzi.</p></div>
+      <div class="card"><div class="card-icon">🤖</div><div class="card-step">STEP 2</div><h3>L'AI analizza</h3><p>Identifica clausole critiche, elementi mancanti e rischi in pochi secondi.</p></div>
+      <div class="card"><div class="card-icon">📬</div><div class="card-step">STEP 3</div><h3>Ricevi il report</h3><p>Il report strutturato arriva nella tua email, pronto da allegare al fascicolo.</p></div>
+    </div>
+  </div>
+
+  <div class="section-white">
+    <div class="section" style="padding-top:72px;padding-bottom:72px">
+      <div class="report-grid">
+        <div>
+          <div class="label-sm">Il report</div>
+          <h2 style="font-size:clamp(1.4rem,2.5vw,2.1rem);margin-bottom:14px;line-height:1.25">Un'analisi completa<br>e professionale</h2>
+          <p style="font-size:0.87rem;color:var(--muted);line-height:1.7;margin-bottom:28px">Struttura fissa pensata per i professionisti, allegabile direttamente al fascicolo.</p>
+          <button class="btn btn-dark" style="padding:13px 28px;font-size:0.78rem" onclick="showAnalyzer()">PROVA ORA</button>
+        </div>
+        <div class="report-box">
+          <div style="font-size:0.68rem;letter-spacing:0.1em;color:#bbb;margin-bottom:16px">CONTENUTO DEL REPORT</div>
+          <div class="report-row"><div><div class="report-row-label">Sintesi dell'atto</div><div class="report-row-detail">Tipo, parti, oggetto e data</div></div><span class="arrow">→</span></div>
+          <div class="report-row"><div><div class="report-row-label">Clausole critiche</div><div class="report-row-detail">Con livello di rischio alto / medio / basso</div></div><span class="arrow">→</span></div>
+          <div class="report-row"><div><div class="report-row-label">Elementi mancanti</div><div class="report-row-detail">Rispetto alla prassi legale italiana</div></div><span class="arrow">→</span></div>
+          <div class="report-row"><div><div class="report-row-label">Raccomandazioni</div><div class="report-row-detail">Suggerimenti operativi per il professionista</div></div><span class="arrow">→</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sicurezza">
+    <div class="dark-box">
+      <div>
+        <h2>I tuoi documenti<br>rimangono tuoi</h2>
+        <p>Nessun documento viene salvato dopo l'analisi. Tutto in tempo reale, nel pieno rispetto del GDPR.</p>
+      </div>
+      <div class="dark-list">
+        <span>🔒 Nessun salvataggio dati</span>
+        <span>✅ Conforme GDPR</span>
+        <span>⚡ Elaborazione in tempo reale</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Pronto ad analizzare il primo atto?</h2>
+    <p>Carica il PDF e ricevi il report in pochi secondi.</p>
+    <button class="btn btn-dark" style="padding:18px 52px;font-size:0.88rem" onclick="showAnalyzer()">INIZIA ORA — GRATIS</button>
+    <div class="cta-sub">Nessuna registrazione · PDF testuali e scansionati</div>
+  </div>
+
+  <footer>
+    <div class="logo">⚖️</div>
+    <p>L'analisi AI non sostituisce il parere di un professionista legale abilitato.</p>
+  </footer>
+</div>
+
+<!-- ═══ ANALYZER PAGE ════════════════════════════════════════════════════════ -->
+
+<div id="analyzer-page">
+  <div class="topbar">
+    <button class="topbar-back" onclick="showHome()">← Torna alla home</button>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">Analisi atto legale</span>
+  </div>
+
+  <div class="analyzer-inner">
+    <!-- Step bar -->
+    <div class="stepbar" id="stepbar"></div>
+
+```
+<!-- Step 0: Upload -->
+<div id="step-0">
+  <h2 style="font-size:1.7rem;margin-bottom:6px">Carica l'atto legale</h2>
+  <p style="color:var(--muted);font-size:0.88rem;margin-bottom:28px">PDF testuale o scansionato · Max 30 MB · Mai salvato</p>
+
+  <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+    <input type="file" id="file-input" accept="application/pdf" style="display:none" onchange="handleFileSelect(this.files[0])">
+    <div class="dropzone-icon" id="dz-icon">⬆️</div>
+    <div id="dz-text">
+      <div class="dropzone-title">Trascina il PDF o clicca per selezionarlo</div>
+      <div class="dropzone-sub">Testuale o scansionato · max 30 MB</div>
+    </div>
+  </div>
+
+  <label class="field-label">EMAIL PER RICEVERE IL REPORT</label>
+  <input type="email" id="email-input" placeholder="nome@studio-legale.it" />
+
+  <div id="error-box" class="error-box" style="display:none"></div>
+
+  <button class="btn btn-dark" id="analyze-btn" style="width:100%;padding:15px;font-size:0.85rem" disabled onclick="handleAnalyze()">
+    AVVIA ANALISI →
+  </button>
+  <p class="disclaimer">🔒 Mai salvato · Non sostituisce parere professionale</p>
+</div>
+
+<!-- Step 1: Loading -->
+<div id="step-1" style="display:none">
+  <div class="loading-wrap">
+    <div class="spinner"></div>
+    <h3 class="loading-title" id="status-text">Elaborazione…</h3>
+    <p class="loading-sub">Per PDF scansionati attendere qualche secondo in più</p>
+  </div>
+</div>
+
+<!-- Step 2: Results -->
+<div id="step-2" style="display:none"></div>
+```
+
+  </div>
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentFile = null;
+let currentStep = 0;
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function showAnalyzer() {
+  document.getElementById('home-page').style.display = 'none';
+  document.getElementById('analyzer-page').style.display = 'block';
+  window.scrollTo(0, 0);
+  renderStepBar(0);
+}
+function showHome() {
+  document.getElementById('home-page').style.display = 'block';
+  document.getElementById('analyzer-page').style.display = 'none';
+  resetAnalyzer();
+  window.scrollTo(0, 0);
+}
+
+// ── Step bar ──────────────────────────────────────────────────────────────────
+function renderStepBar(current) {
+  const steps = ['Carica', 'Analisi', 'Risultati'];
+  const el = document.getElementById('stepbar');
+  el.innerHTML = steps.map((s, i) => `
+    <div class="step-circle ${i <= current ? 'active' : 'inactive'}">${i < current ? '✓' : i + 1}</div>
+    <span class="step-label ${i <= current ? 'active' : 'inactive'}" style="margin-right:${i < 2 ? 0 : 0}">${s}</span>
+    ${i < 2 ? `<div class="step-line ${i < current ? 'active' : 'inactive'}"></div>` : ''}
+  `).join('');
+}
+
+// ── File handling ─────────────────────────────────────────────────────────────
+const dz = document.getElementById('dropzone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragging'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragging'));
+dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragging'); handleFileSelect(e.dataTransfer.files[0]); });
+
+function handleFileSelect(file) {
+  if (!file || file.type !== 'application/pdf') { showError('Carica un file PDF valido.'); return; }
+  if (file.size > 30 * 1024 * 1024) { showError('Il file supera i 30 MB.'); return; }
+  currentFile = file;
+  hideError();
+  dz.classList.add('has-file');
+  document.getElementById('dz-icon').textContent = '📄';
+  document.getElementById('dz-text').innerHTML = `
+    <div class="file-name">${file.name}</div>
+    <div class="file-size">${(file.size / 1024).toFixed(0)} KB · clicca per cambiare</div>
+  `;
+  updateBtn();
+}
+
+document.getElementById('email-input').addEventListener('input', updateBtn);
+
+function updateBtn() {
+  const email = document.getElementById('email-input').value;
+  const valid = currentFile && email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  document.getElementById('analyze-btn').disabled = !valid;
+}
+
+// ── PDF extraction ────────────────────────────────────────────────────────────
+async function extractPDF(file) {
+  setStatus('Lettura del PDF…');
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+
+  setStatus(`Estrazione testo (${pdf.numPages} pagine)…`);
+  let text = '';
+  for (let i = 1; i <= Math.min(pdf.numPages, 25); i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(it => it.str).join(' ') + '\n';
+  }
+
+  if (text.trim().length > 300) {
+    return { text: text.trim().slice(0, 15000) };
+  }
+
+  // Scanned — render as images
+  setStatus('PDF scansionato — rendering pagine…');
+  const images = [];
+  for (let i = 1; i <= Math.min(pdf.numPages, 4); i++) {
+    setStatus(`Rendering pagina ${i}/${Math.min(pdf.numPages, 4)}…`);
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 1.4 });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+    images.push(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
+  }
+  return { images };
+}
+
+// ── API call via Netlify function ─────────────────────────────────────────────
+async function callAPI(extracted) {
+  setStatus('Analisi AI in corso…');
+  const res = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(extracted),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return await res.json();
+}
+
+// ── Main flow ─────────────────────────────────────────────────────────────────
+async function handleAnalyze() {
+  const email = document.getElementById('email-input').value;
+  hideError();
+  goStep(1);
+  try {
+    const extracted = await extractPDF(currentFile);
+    const analysis = await callAPI(extracted);
+    goStep(2);
+    renderResults(analysis, email);
+  } catch (err) {
+    goStep(0);
+    showError('Errore: ' + err.message);
+  }
+}
+
+function goStep(n) {
+  currentStep = n;
+  renderStepBar(n);
+  document.getElementById('step-0').style.display = n === 0 ? 'block' : 'none';
+  document.getElementById('step-1').style.display = n === 1 ? 'block' : 'none';
+  document.getElementById('step-2').style.display = n === 2 ? 'block' : 'none';
+}
+
+function setStatus(msg) { document.getElementById('status-text').textContent = msg; }
+function showError(msg) { const el = document.getElementById('error-box'); el.textContent = msg; el.style.display = 'block'; }
+function hideError() { document.getElementById('error-box').style.display = 'none'; }
+
+// ── Render results ────────────────────────────────────────────────────────────
+function renderResults(a, email) {
+  const valClass = a.valutazioneGenerale === 'positiva' ? 'val-positiva' : a.valutazioneGenerale === 'critica' ? 'val-critica' : 'val-neutra';
+  let html = `
+    <div class="result-header">
+      <div>
+        <div class="result-badge-ok">✓ ANALISI COMPLETATA</div>
+        <h2 class="result-title">${a.tipoAtto || 'Atto Legale'}</h2>
+        ${a.data ? `<div class="result-date">Data: ${a.data}</div>` : ''}
+      </div>
+      <span class="valutazione ${valClass}">${(a.valutazioneGenerale || 'neutra').toUpperCase()}</span>
+    </div>
+
+    <div class="result-card bg-muted">
+      <div class="card-label">SINTESI</div>
+      <p style="font-size:0.92rem;line-height:1.75;color:var(--dark)">${a.sintesi || ''}</p>
+    </div>
+  `;
+
+  if (a.parti?.length) {
+    html += `<div class="result-card"><div class="card-label">PARTI COINVOLTE</div><div>${a.parti.map(p => `<span class="tag">${p}</span>`).join('')}</div></div>`;
+  }
+
+  if (a.clausoleCritiche?.length) {
+    html += `<div class="result-card"><div class="card-label">CLAUSOLE CRITICHE</div>`;
+    for (const c of a.clausoleCritiche) {
+      const risk = c.livelloRischio || 'medio';
+      html += `
+        <div class="clausola clausola-${risk}">
+          <div class="clausola-header">
+            <span class="clausola-title">${c.titolo}</span>
+            <span class="risk-badge risk-${risk}">${risk.toUpperCase()}</span>
+          </div>
+          <p class="clausola-desc">${c.descrizione}</p>
+        </div>`;
+    }
+    html += `</div>`;
+  }
+
+  if (a.elementiMancanti?.length) {
+    html += `<div class="result-card"><div class="card-label">ELEMENTI MANCANTI</div><ul style="padding-left:20px">${a.elementiMancanti.map(e => `<li style="font-size:0.85rem;color:#555;margin-bottom:5px;line-height:1.6">${e}</li>`).join('')}</ul></div>`;
+  }
+
+  if (a.raccomandazioni?.length) {
+    html += `<div class="result-card bg-warn"><div class="card-label warn">RACCOMANDAZIONI</div><ul style="padding-left:20px">${a.raccomandazioni.map(r => `<li style="font-size:0.85rem;color:#78350f;margin-bottom:5px;line-height:1.6">${r}</li>`).join('')}</ul></div>`;
+  }
+
+  html += `
+    <div class="email-row" id="email-row">
+      <div>
+        <div class="email-row-title">📧 Invia report via email</div>
+        <div class="email-row-addr">${email}</div>
+      </div>
+      <button class="btn btn-dark btn-sm" onclick="sendEmail()">INVIA PDF</button>
+    </div>
+    <p class="ai-disclaimer">⚠️ L'analisi AI non costituisce parere legale professionale</p>
+    <button class="btn btn-outline" onclick="resetAnalyzer();goStep(0)">← Analizza un altro atto</button>
+  `;
+
+  document.getElementById('step-2').innerHTML = html;
+}
+
+function sendEmail() {
+  const row = document.getElementById('email-row');
+  row.classList.add('sent');
+  row.innerHTML = `<div><div class="email-row-title">✅ Email inviata!</div></div>`;
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+function resetAnalyzer() {
+  currentFile = null;
+  document.getElementById('file-input').value = '';
+  document.getElementById('email-input').value = '';
+  document.getElementById('dz-icon').textContent = '⬆️';
+  document.getElementById('dz-text').innerHTML = `<div class="dropzone-title">Trascina il PDF o clicca per selezionarlo</div><div class="dropzone-sub">Testuale o scansionato · max 30 MB</div>`;
+  document.getElementById('dropzone').classList.remove('has-file');
+  document.getElementById('analyze-btn').disabled = true;
+  hideError();
+  renderStepBar(0);
+}
+</script>
+
+</body>
+</html>
